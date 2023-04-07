@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('extension');
             $table->integer('size');
             $table->integer('downloads');
-            $table->timestamps('last_download');
+            $table->datetime('last_download')->nullable();
         });
     }
 

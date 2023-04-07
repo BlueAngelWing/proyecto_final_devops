@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Video;
+use App\Traits\HttpResponses;
 
 class VideoController extends Controller
 {
+
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +43,7 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        $video = Imaga::create([
+        $video = Video::create([
             'name' => $request->name,
             'extension' => $request->extension,
             'size' =>   $request->size,

@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Image;
+use App\Traits\HttpResponses;
 
 class ImageController extends Controller
 {
+
+    use HttpResponses;
+    
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +44,7 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        $image = Imaga::create([
+        $image = Image::create([
             'name' => $request->name,
             'extension' => $request->extension,
             'size' =>   $request->size,
