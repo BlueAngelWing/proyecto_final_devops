@@ -30,6 +30,6 @@ RUN composer install
 EXPOSE 8888
 
 RUN nohup php artisan key:generate  &
-RUN php artisan migrate
+RUN php artisan migrate:fresh
 RUN php artisan test
 RUN nohup php artisan serve --host 0.0.0.0 --port 8888 &
