@@ -29,4 +29,7 @@ RUN composer install
 # Expose port 8000 and start PHP-FPM server
 EXPOSE 8888
 
+RUN nohup php artisan key:generate  &
+RUN php artisan migrate
+RUN php artisan test
 RUN nohup php artisan serve --host 0.0.0.0 --port 8888 &
