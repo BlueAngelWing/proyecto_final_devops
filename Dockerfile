@@ -1,32 +1,29 @@
-FROM php:8.1-fpm
+FROM php:8.1
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Install required extensions for Laravel
+RUN apt-get update \
+    && apt-get install -y libzip-dev unzip \
+    && docker-php-ext-install pdo_mysql zip \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set working directory
-WORKDIR /var/www/html
+# Set the working directory to /var/www
+WORKDIR /var/www
 
-# Copy project files
-COPY . .
+# Copy the project into the container
+COPY . /var/www
 
-# Install dependencies with Composerdocker build -t my-laravel-app .
-RUN composer install
+# Install project dependencies
+RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# Expose port 8000 and start PHP-FPM server
-EXPOSE 8888
+# Generate application key
+RUN php artisan key:generate
 
-RUN nohup php artisan serve --host 0.0.0.0 --port 8888 &
+# Run database migrations
+RUN php artisan migrate --force
+
+# Serve the project with nohup
+CMD nohup php artisan serve --host=0.0.0.0 --port=8888 &
