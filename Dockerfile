@@ -10,10 +10,11 @@ RUN apt-get update \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Set the working directory to /var/www
-WORKDIR /var/www
+WORKDIR /var/www/html
 
 # Copy the project into the container
-COPY . /var/www
+COPY . /var/www/html
+
 
 # Install project dependencies
 RUN composer install --no-interaction --optimize-autoloader --no-dev
